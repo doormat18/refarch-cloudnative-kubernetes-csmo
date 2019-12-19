@@ -99,7 +99,10 @@ function install_prometheus {
 		new_release="${NAMESPACE}-prometheus"
 
 		#time helm install --namespace ${NAMESPACE} stable/prometheus --name ${new_release} --set image.pullPolicy=Always --set server.persistentVolume.enabled=false --set alertmanager.persistentVolume.enabled=false --timeout 600
-		time helm install --namespace ${NAMESPACE} prometheus-3.0.3.tgz --name ${new_release} --set image.pullPolicy=Always --set server.persistentVolume.enabled=false --set alertmanager.persistentVolume.enabled=false --timeout 600
+		# helm v2
+		#time helm install --namespace ${NAMESPACE} prometheus-3.0.3.tgz --name ${new_release} --set image.pullPolicy=Always --set server.persistentVolume.enabled=false --set alertmanager.persistentVolume.enabled=false --timeout 600
+		# helm v3
+		time helm install --namespace ${NAMESPACE} ${new_release} prometheus-3.0.3.tgz --set image.pullPolicy=Always --set server.persistentVolume.enabled=false --set alertmanager.persistentVolume.enabled=false --timeout 600s
 
 		local status=$?
 
@@ -124,7 +127,10 @@ function install_grafana {
 		printf "\n\n${grn}Installing grafana chart. This will take a few minutes...${end} ${coffee3}\n\n"
 		new_release="${NAMESPACE}-grafana"
 
-		time helm install --namespace ${NAMESPACE} grafana-bc-0.3.1.tgz --name ${new_release} --set image.pullPolicy=Always --set server.setDatasource.datasource.url=http://${NAMESPACE}-prometheus-prometheus-server.${NAMESPACE}.svc.cluster.local --set server.persistentVolume.enabled=false --set server.serviceType=NodePort --timeout 600
+		# helm v2
+		#time helm install --namespace ${NAMESPACE} grafana-bc-0.3.1.tgz --name ${new_release} --set image.pullPolicy=Always --set server.setDatasource.datasource.url=http://${NAMESPACE}-prometheus-prometheus-server.${NAMESPACE}.svc.cluster.local --set server.persistentVolume.enabled=false --set server.serviceType=NodePort --timeout 600
+		# helm v3
+		time helm install --namespace ${NAMESPACE} ${new_release} grafana-bc-0.3.1.tgz --set image.pullPolicy=Always --set server.setDatasource.datasource.url=http://${NAMESPACE}-prometheus-prometheus-server.${NAMESPACE}.svc.cluster.local --set server.persistentVolume.enabled=false --set server.serviceType=NodePort --timeout 600s
 
 		local status=$?
 
@@ -187,7 +193,8 @@ else
 	set_cluster_context
 fi
 
-initialize_helm
+# helm v3 does not require init
+#initialize_helm
 create_kube_namespace
 
 # Install Bluecompute

@@ -61,9 +61,9 @@ KUBE_PATH=$(command -v helm)
 if [[ $? -ne 0 ]]; then
 	printf "\n\n${grn}Installing Helm CLI (helm)...${end}\n"
 
-	curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh
+	curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
 	chmod 700 get_helm.sh
-	./get_helm.sh -v v2.4.2
+	./get_helm.sh -v v3.0.0
 
 	rm get_helm.sh
 fi
